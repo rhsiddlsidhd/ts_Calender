@@ -1,7 +1,8 @@
-import { test } from "./index.js";
+import { todayClass } from "./index.js";
 
 const weekday_ = document.querySelector(".weekday_") as HTMLElement;
-const result = test.$stringday();
+
+const result = todayClass.navDayOfWeekBuilder();
 
 result.forEach((it) => {
   const button = document.createElement("button");

@@ -7,7 +7,7 @@ class Today {
     year;
     month;
     date;
-    static stringDay = [
+    static dayOfWeekStore = [
         "일요일",
         "월요일",
         "화요일",
@@ -16,44 +16,67 @@ class Today {
         "금요일",
         "토요일",
     ];
-    static daysArr = [];
+    dateStore = [];
     //생성자
     constructor(year, month, date) {
         this.year = year;
         this.month = month;
         this.date = date;
-        this.formatDays();
+        this.dateInputHandler();
     }
     //메서드
-    formatTodayString(Separator) {
+    clickEvent() {
+        const buttonValue = document.querySelectorAll("button[value]");
+        const changeDate = (e) => {
+            const value = e.target.value;
+            if (Number(value) !== this.date) {
+                this.date = Number(value);
+                // this.navStringBuilder(this.date);
+            }
+        };
+        [...buttonValue].forEach((it) => {
+            const btn = it;
+            btn.addEventListener("click", changeDate);
+        });
+    }
+    todayDatePicker() {
+        /**버튼 value값과
+         * this.date가 일치하는걸 컬러준다
+         */
+        setTimeout(() => {
+            const test = document.querySelectorAll("button[value]");
+            [...test].find((it) => {
+                const btn = it;
+                if (Number(btn.value) === this.date) {
+                    btn.style.backgroundColor = "#FEC7B4";
+                }
+            });
+        }, 1);
+    }
+    todayDate(Separator) {
         return `${this.year}${Separator}${this.month}${Separator}${this.date}`;
     }
-    formatDays() {
-        // if (offset !== 0 && offset !== undefined) {
-        //   this.month += offset > 0 ? offset : offset;
-        // }
-        // console.log(this.month);
+    navStringBuilder() {
+        const result = this.todayDate(".");
+        return result;
+    }
+    navDayOfWeekBuilder() {
+        return Today.dayOfWeekStore;
+    }
+    dateInputHandler() {
         const startOfDay = new Date(this.year, this.month - 1, 1).getDay();
-        const days = new Date(this.year, this.month, 0).getDate();
-        Today.daysArr = [];
+        const date = new Date(this.year, this.month, 0).getDate();
         for (let i = 0; i < startOfDay; i++) {
-            Today.daysArr.push(undefined);
+            this.dateStore.push(undefined);
         }
-        for (let i = 1; i <= days; i++) {
-            Today.daysArr.push(i);
+        for (let i = 1; i <= date; i++) {
+            this.dateStore.push(i);
         }
     }
-    $stringday() {
-        return Today.stringDay;
+    dateStoreBuilder() {
+        return this.dateStore;
     }
-    getDaysOfMonth() {
-        return Today.daysArr;
-    }
-    todayBtn() {
-        const today = this.formatTodayString(".");
-        return today;
-    }
-    prevBtn(newMonth) {
+    prevBtnCal(newMonth) {
         this.month += newMonth;
         if (this.month > 12) {
             this.year += 1;
@@ -63,13 +86,34 @@ class Today {
             this.year -= 1;
             this.month += 12;
         }
-        this.formatDays();
-        const today = this.formatTodayString(".");
-        return today;
+        this.dateInputHandler();
+        const result = this.todayDate(".");
+        return result;
+    }
+    dataClear() {
+        this.dateStore = [];
+    }
+    render(value) {
+        if (value) {
+            while (value.firstChild) {
+                value.removeChild(value.firstChild);
+            }
+        }
+        const result = todayClass.dateStoreBuilder();
+        result.forEach((it) => {
+            const button = document.createElement("button");
+            if (it !== undefined) {
+                button.value = it.toString();
+                button.innerHTML = it.toString();
+            }
+            if (value !== undefined) {
+                value.appendChild(button);
+            }
+        });
     }
 }
-const test = new Today(year, month, date);
-export { test };
+const todayClass = new Today(year, month, date);
+export { todayClass };
 /**
  * calculator 계산기 때와 달리
  *

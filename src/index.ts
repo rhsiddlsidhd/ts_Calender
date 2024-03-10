@@ -9,7 +9,7 @@ class Today {
   month: number;
   date: number;
 
-  static stringDay: string[] = [
+  static dayOfWeekStore: string[] = [
     "일요일",
     "월요일",
     "화요일",
@@ -18,49 +18,49 @@ class Today {
     "금요일",
     "토요일",
   ];
-  static daysArr: (number | undefined)[] = [];
+  dateStore: (number | undefined)[] = [];
   //생성자
   constructor(year: number, month: number, date: number) {
     this.year = year;
     this.month = month;
     this.date = date;
-    this.formatDays();
+    this.dateInputHandler();
   }
 
   //메서드
 
-  formatTodayString(Separator: string): string {
+  todayDate(Separator: string): string {
     return `${this.year}${Separator}${this.month}${Separator}${this.date}`;
   }
 
-  formatDays(): void {
+  navStringBuilder() {
+    const result = this.todayDate(".");
+    return result;
+  }
+
+  navDayOfWeekBuilder(): string[] {
+    return Today.dayOfWeekStore;
+  }
+
+  dateInputHandler(): void {
     const startOfDay = new Date(this.year, this.month - 1, 1).getDay();
 
-    const days: number = new Date(this.year, this.month, 0).getDate();
+    const date: number = new Date(this.year, this.month, 0).getDate();
 
     for (let i = 0; i < startOfDay; i++) {
-      Today.daysArr.push(undefined);
+      this.dateStore.push(undefined);
     }
 
-    for (let i = 1; i <= days; i++) {
-      Today.daysArr.push(i);
+    for (let i = 1; i <= date; i++) {
+      this.dateStore.push(i);
     }
   }
 
-  $stringday(): string[] {
-    return Today.stringDay;
+  dateStoreBuilder(): (number | undefined)[] {
+    return this.dateStore;
   }
 
-  getDaysOfMonth(): (number | undefined)[] {
-    return Today.daysArr;
-  }
-
-  todayBtn() {
-    const today = this.formatTodayString(".");
-    return today;
-  }
-
-  prevBtn(newMonth: number): string {
+  prevBtnCal(newMonth: number): string {
     this.month += newMonth;
     if (this.month > 12) {
       this.year += 1;
@@ -69,15 +69,40 @@ class Today {
       this.year -= 1;
       this.month += 12;
     }
-    this.formatDays();
-    const today = this.formatTodayString(".");
-    return today;
+    this.dateInputHandler();
+    const result = this.todayDate(".");
+    return result;
+  }
+
+  dataClear() {
+    this.dateStore = [];
+  }
+
+  render(value?: HTMLElement) {
+    if (value) {
+      while (value.firstChild) {
+        value.removeChild(value.firstChild);
+      }
+    }
+    const result = todayClass.dateStoreBuilder();
+
+    result.forEach((it) => {
+      const button = document.createElement("button");
+
+      if (it !== undefined) {
+        button.value = it.toString();
+        button.innerHTML = it.toString();
+      }
+      if (value !== undefined) {
+        value.appendChild(button);
+      }
+    });
   }
 }
 
-const test = new Today(year, month, date);
+const todayClass = new Today(year, month, date);
 
-export { test };
+export { todayClass };
 
 /**
  * calculator 계산기 때와 달리

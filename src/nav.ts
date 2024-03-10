@@ -1,6 +1,6 @@
-import { test } from "./index.js";
+import { todayClass } from "./index.js";
 
-const $todayBtn = document.querySelector(".nav_today") as HTMLButtonElement;
+const $navToday = document.querySelector(".nav_today") as HTMLButtonElement;
 const $nav_prev = document.querySelector(".nav_prev") as HTMLButtonElement;
 const $nav_next = document.querySelector(".nav_next") as HTMLButtonElement;
 const $date_ = document.querySelector(".date_") as HTMLElement;
@@ -10,56 +10,35 @@ const $date_ = document.querySelector(".date_") as HTMLElement;
  */
 
 const updateToday = () => {
-  const currentDate = test.todayBtn();
-  $todayBtn.innerHTML = currentDate;
+  const currentDate = todayClass.navStringBuilder();
+
+  $navToday.innerHTML = currentDate;
 };
 
 updateToday();
-$todayBtn.addEventListener("click", updateToday);
+$navToday.addEventListener("click", updateToday);
 
 /**
  * prev 버튼
  */
 
-const updatePrev = () => {
-  const currentDate = test.prevBtn(-1);
-  $todayBtn.innerHTML = `${currentDate}`;
-
-  $date_.innerHTML = "";
-
-  const render = test.getDaysOfMonth();
-
-  render.forEach((it) => {
-    const button = document.createElement("button");
-    if (it !== undefined) {
-      button.innerHTML = it.toString();
-    }
-
-    $date_.appendChild(button);
-  });
+const prevBtn = () => {
+  todayClass.dataClear();
+  const currentDate = todayClass.prevBtnCal(-1);
+  todayClass.render($date_);
+  $navToday.innerHTML = `${currentDate}`;
 };
-$nav_prev.addEventListener("click", updatePrev);
+$nav_prev.addEventListener("click", prevBtn);
 
 /**
  * next 버튼
  */
 
-const updateNext = () => {
-  const currentDate = test.prevBtn(1);
-  $todayBtn.innerHTML = `${currentDate}`;
-
-  $date_.innerHTML = "";
-
-  const render = test.getDaysOfMonth();
-
-  render.forEach((it) => {
-    const button = document.createElement("button");
-    if (it !== undefined) {
-      button.innerHTML = it.toString();
-    }
-
-    $date_.appendChild(button);
-  });
+const nextBtn = () => {
+  todayClass.dataClear();
+  const currentDate = todayClass.prevBtnCal(1);
+  todayClass.render($date_);
+  $navToday.innerHTML = `${currentDate}`;
 };
 
-$nav_next.addEventListener("click", updateNext);
+$nav_next.addEventListener("click", nextBtn);
