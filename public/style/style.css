@@ -5,7 +5,6 @@
 }
 
 body {
-  border: 1px solid red;
   width: 20rem;
   height: 15rem;
 }
@@ -19,7 +18,13 @@ nav {
 
 nav > [class^="nav_"] {
   width: 3rem;
+  min-width: fit-content;
   height: 2rem;
+}
+
+.nav_today {
+  font-weight: bold;
+  padding: 5px;
 }
 
 main {
@@ -36,7 +41,7 @@ main > section {
   justify-content: space-between;
 }
 
-main > section > [class^="day_"] {
+main > section > button {
   flex: 1;
 }
 
@@ -47,6 +52,6 @@ main > article {
   flex-wrap: wrap;
 }
 
-main > article > [class^="date_"] {
+main > article > button {
   flex-basis: calc(100% / 7);
 }
